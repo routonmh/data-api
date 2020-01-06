@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data-api", "data-api\data-api.csproj", "{4EB74254-9F6D-4112-90D8-251A2F163EF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{7C6672C6-FADC-4FB8-B920-0A3BFFDD8A81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EB74254-9F6D-4112-90D8-251A2F163EF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EB74254-9F6D-4112-90D8-251A2F163EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EB74254-9F6D-4112-90D8-251A2F163EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EB74254-9F6D-4112-90D8-251A2F163EF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C6672C6-FADC-4FB8-B920-0A3BFFDD8A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6672C6-FADC-4FB8-B920-0A3BFFDD8A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6672C6-FADC-4FB8-B920-0A3BFFDD8A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6672C6-FADC-4FB8-B920-0A3BFFDD8A81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
