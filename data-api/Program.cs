@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace data_api
+namespace DataAPI
 {
     public class Program
     {
@@ -19,6 +19,7 @@ namespace data_api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(config => config.AddConsole())
                 .UseStartup<Startup>();
     }
 }
