@@ -44,25 +44,29 @@ namespace DataAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Cross Origin Resource Sharing - Allow requests from other domains within browsers.
             app.UseCors("OpenCorsPolicy");
 
+            // Setup API Documentation
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Plant API");
-                c.RoutePrefix = "apidocs";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Data API");
+                c.RoutePrefix = "apidocs"; // View at /apidocs
             });
 
             if (env.IsDevelopment())
             {
+                // Error page
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                // HTTPS Header Middleware
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // Attach API controllers
             app.UseMvc();
         }
     }
