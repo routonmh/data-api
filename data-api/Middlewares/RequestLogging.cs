@@ -19,7 +19,7 @@ namespace DataAPI.Middlewares
         }
 
         /// <summary>
-        /// Middleware funciotn
+        /// Middleware function
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
