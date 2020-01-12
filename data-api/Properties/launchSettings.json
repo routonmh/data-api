@@ -19,12 +19,13 @@
     },
     "data_api": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "LOCAL_DB_CONNECTION": "Data Source=localhost;Initial Catalog=datapidb;User ID=serveruser;Password=pass"
+        "LOCAL_DB_CONNECTION": "Data Source=localhost;Initial Catalog=datapidb;User ID=serveruser;Password=pass",
+        "JWT_SECRET":"CyPHGrKH55y5hF7m"
       }
     }
   }

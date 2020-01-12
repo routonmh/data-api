@@ -9,19 +9,19 @@ namespace DataAPI.Models.Users
         public string Email { get; }
         public string FirstName { get; }
         public string LastName { get; }
-        public DateTime CreationDate { get; }
+        public DateTime DateCreated { get; }
         public bool IsActive { get; }
         [JsonIgnore] public string PasswordHash { get; }
 
         public UserAccount(Guid accountId, string email, string firstName, string lastName, string passwordHash,
-            DateTime creationDate, bool isActive)
+            DateTime dateCreated, bool isActive)
         {
             AccountID = accountId;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
             PasswordHash = passwordHash;
-            CreationDate = creationDate;
+            DateCreated = dateCreated;
             IsActive = isActive;
         }
     }

@@ -1,49 +1,44 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Threading.Tasks;
+using DataAPI.Constants;
+using DataAPI.Middlewares;
 using DataAPI.Models.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
-namespace DefaultNamespace
+namespace DataAPI.Controllers
 {
-    [Route("users")]
-    public class UsersController
+    [Route("api/users")]
+    [ApiController]
+    public class UsersController : Controller
     {
         /// <summary>
-        ///
+        /// Get the account details of the current logged in user.
         /// </summary>
-        /// <param name="userAccountId"></param>
         /// <returns></returns>
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<string>> GetFullName(string userAccountId)
+        [HttpGet("account-details")]
+        public async Task<ActionResult<UserAccount>> GetAccountDetails(
+            [FromHeader(Name = Headers.ACCOUNT_ID_HEADER_NAME)]
+            string accountID)
         {
-            string fullName = "";
-            Guid id;
-            if (Guid.TryParse(userAccountId, out id))
-            {
-                UserAccount account = await UserAccountsModel.GetUserByID(id);
-                if (account != null)
-                {
-                    fullName = account.FirstName + account.LastName;
-                }
-            }
-
-            return fullName;
+            return await UserAccountsModel.GetUserByID(Guid.Parse(accountID));
         }
 
         /// <summary>
         ///
         /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
+        /// <param name="sessionID">From SessionID Header</param>
         /// <returns></returns>
-        [HttpPost("create-user")]
-        public async Task<ActionResult> CreateUser(string email, string firstName, string lastName)
+        [HttpPost("logout")]
+        public async Task<ActionResult> LogoutUserSession(
+            [FromHeader(Name = Headers.SESSION_ID_HEADER_NAME)]
+            string sessionID)
         {
-            // if (await UsersModel.AddUser(new UserAccount(firstName, lastName)))
-            //     // Status 200
-            //     return new OkResult();
-            // Status 400
-            return new BadRequestResult();
+            int t = 1;
+
+            return new OkResult();
         }
     }
 }

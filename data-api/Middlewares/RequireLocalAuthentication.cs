@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
+using DataAPI.Constants;
 using DataAPI.Models.DBs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,10 +14,6 @@ namespace DataAPI.Middlewares
 {
     public class RequireLocalAuthentication
     {
-        public static readonly string USER_ACCOUNT_ID_HEADER_NAME = "UserAccountID";
-        public static readonly string USER_SESSION_ID_HEADER_NAME = "SessionID";
-        public static readonly string AUTHORIZATION_HEADER_NAME = "authorization";
-
         private static readonly int SESSION_VALID_DAYS = 14; // Sessions are valid for 14 days
         private static readonly int SESSION_MAX_INACTIVE_DAYS = 5; // Sessions not used in # days are invalid.
 
@@ -44,7 +41,7 @@ namespace DataAPI.Middlewares
             {
                 IssuerSigningKey = signingKey,
                 ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
+                ValidateLifetime = false, // We check session lifetime via DB
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
@@ -63,7 +60,7 @@ namespace DataAPI.Middlewares
             logger.LogInformation("Request authorization . . .");
 
             bool isAuthorized = false;
-            string jwt = context.Request.Headers[AUTHORIZATION_HEADER_NAME];
+            string jwt = context.Request.Headers[Headers.AUTHORIZATION_HEADER_NAME];
 
             Guid accountID = Guid.Empty;
             Guid sessionID = Guid.Empty;
@@ -77,8 +74,8 @@ namespace DataAPI.Middlewares
                     tokenHandler.ValidateToken(jwt, validationParameters, out securityTokenResult);
 
                     JwtSecurityToken token = tokenHandler.ReadJwtToken(jwt);
-                    accountID = Guid.Parse(token.Payload["AccountID"] as string ?? "");
-                    sessionID = Guid.Parse(token.Payload["SessionID"] as string ?? "");
+                    accountID = Guid.Parse(token.Payload[AuthTokenPayload.ACCOUNT_ID_FIELD_NAME] as string ?? "");
+                    sessionID = Guid.Parse(token.Payload[AuthTokenPayload.SESSION_ID_FIELD_NAME] as string ?? "");
 
                     if (await validateUserSession(accountID, sessionID))
                         isAuthorized = true;
@@ -92,11 +89,11 @@ namespace DataAPI.Middlewares
             // Set Header with
             if (isAuthorized)
             {
-                context.Request.Headers.Remove(USER_ACCOUNT_ID_HEADER_NAME);
-                context.Request.Headers.Remove(USER_SESSION_ID_HEADER_NAME);
+                context.Request.Headers.Remove(Headers.ACCOUNT_ID_HEADER_NAME);
+                context.Request.Headers.Remove(Headers.SESSION_ID_HEADER_NAME);
 
-                context.Request.Headers.Add(USER_ACCOUNT_ID_HEADER_NAME, accountID.ToString());
-                context.Request.Headers.Add(USER_SESSION_ID_HEADER_NAME, sessionID.ToString());
+                context.Request.Headers.Add(Headers.ACCOUNT_ID_HEADER_NAME, accountID.ToString());
+                context.Request.Headers.Add(Headers.SESSION_ID_HEADER_NAME, sessionID.ToString());
 
                 await next(context);
             }
@@ -149,7 +146,6 @@ namespace DataAPI.Middlewares
 
                     if (now < expirationDate && now < inactivityExpirationDate)
                         isValidSession = true;
-
                 }
             }
 

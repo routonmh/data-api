@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAPI.Constants;
 using DataAPI.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,10 +28,12 @@ namespace DataAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Cross Origin Resource Sharing - Allow requests from other domains within browsers.
+            // Configure CORS Policy
             services.AddCors(o => o.AddPolicy("OpenCorsPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
+                    .AllowAnyMethod() // GET, PUT, POST, DELETE
                     .AllowAnyHeader();
             }));
 
@@ -39,13 +42,16 @@ namespace DataAPI
             services.AddOptions();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Data API", Version = "v1"}); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Data API", Version = "v1"
+            }); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
         {
-            // Cross Origin Resource Sharing - Allow requests from other domains within browsers.
+            // Add configured Cors Policy
             app.UseCors("OpenCorsPolicy");
 
             // Setup API Documentation
@@ -76,7 +82,7 @@ namespace DataAPI
                 appBuilder.Use(async (context, next) =>
                 {
                     string userAccountIdString = context.Request
-                        .Headers[RequireLocalAuthentication.USER_ACCOUNT_ID_HEADER_NAME];
+                        .Headers[Headers.ACCOUNT_ID_HEADER_NAME];
 
                     logger.LogInformation("Request from: {0}", userAccountIdString);
 

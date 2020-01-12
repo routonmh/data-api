@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DefaultNamespace
 {
-    [Route("plants")]
+    [Route("api/plants")]
     [ApiController]
     public class PlantController
     {
@@ -20,6 +21,16 @@ namespace DefaultNamespace
             }
 
             return plant;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("listing")]
+        public async Task<ActionResult<List<PlantEntity>>> GetPlantsListing()
+        {
+            return await PlantsModel.GetPlantsListing();
         }
     }
 }
