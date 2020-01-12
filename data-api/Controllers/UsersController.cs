@@ -20,7 +20,7 @@ namespace DataAPI.Controllers
         /// <returns></returns>
         [HttpGet("account-details")]
         public async Task<ActionResult<UserAccount>> GetAccountDetails(
-            [FromHeader(Name = Headers.ACCOUNT_ID_HEADER_NAME)]
+            [FromHeader(Name = HeaderFields.ACCOUNT_ID_HEADER_NAME)]
             string accountID)
         {
             return await UserAccountsModel.GetUserByID(Guid.Parse(accountID));
@@ -33,7 +33,7 @@ namespace DataAPI.Controllers
         /// <returns></returns>
         [HttpPost("logout")]
         public async Task<ActionResult> LogoutUserSession(
-            [FromHeader(Name = Headers.SESSION_ID_HEADER_NAME)]
+            [FromHeader(Name = HeaderFields.SESSION_ID_HEADER_NAME)]
             string sessionID)
         {
             int t = 1;

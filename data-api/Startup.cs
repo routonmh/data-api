@@ -42,10 +42,13 @@ namespace DataAPI
             services.AddOptions();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo
+            services.AddSwaggerGen(c =>
             {
-                Title = "Data API", Version = "v1"
-            }); });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Data API", Version = "v1"
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,10 +59,10 @@ namespace DataAPI
 
             // Setup API Documentation
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseSwaggerUI(options =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Data API");
-                c.RoutePrefix = "apidocs"; // View at /apidocs
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Data API");
+                options.RoutePrefix = "apidocs"; // View at /apidocs
             });
 
             if (env.IsDevelopment())
@@ -78,11 +81,12 @@ namespace DataAPI
             app.UseWhen(x => x.Request.Path.Value.Contains("/api/"), appBuilder =>
             {
                 appBuilder.UseMiddleware<RequireLocalAuthentication>();
+                appBuilder.UseMiddleware<RequestLogging>();
 
                 appBuilder.Use(async (context, next) =>
                 {
                     string userAccountIdString = context.Request
-                        .Headers[Headers.ACCOUNT_ID_HEADER_NAME];
+                        .Headers[HeaderFields.ACCOUNT_ID_HEADER_NAME];
 
                     logger.LogInformation("Request from: {0}", userAccountIdString);
 

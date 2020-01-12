@@ -60,7 +60,7 @@ namespace DataAPI.Middlewares
             logger.LogInformation("Request authorization . . .");
 
             bool isAuthorized = false;
-            string jwt = context.Request.Headers[Headers.AUTHORIZATION_HEADER_NAME];
+            string jwt = context.Request.Headers[HeaderFields.AUTHORIZATION_HEADER_NAME];
 
             Guid accountID = Guid.Empty;
             Guid sessionID = Guid.Empty;
@@ -77,7 +77,7 @@ namespace DataAPI.Middlewares
                     accountID = Guid.Parse(token.Payload[AuthTokenPayload.ACCOUNT_ID_FIELD_NAME] as string ?? "");
                     sessionID = Guid.Parse(token.Payload[AuthTokenPayload.SESSION_ID_FIELD_NAME] as string ?? "");
 
-                    if (await validateUserSession(accountID, sessionID))
+                    if (await validateUserSession(sessionID, accountID))
                         isAuthorized = true;
                 }
                 catch (Exception ex)
@@ -89,11 +89,11 @@ namespace DataAPI.Middlewares
             // Set Header with
             if (isAuthorized)
             {
-                context.Request.Headers.Remove(Headers.ACCOUNT_ID_HEADER_NAME);
-                context.Request.Headers.Remove(Headers.SESSION_ID_HEADER_NAME);
+                context.Request.Headers.Remove(HeaderFields.ACCOUNT_ID_HEADER_NAME);
+                context.Request.Headers.Remove(HeaderFields.SESSION_ID_HEADER_NAME);
 
-                context.Request.Headers.Add(Headers.ACCOUNT_ID_HEADER_NAME, accountID.ToString());
-                context.Request.Headers.Add(Headers.SESSION_ID_HEADER_NAME, sessionID.ToString());
+                context.Request.Headers.Add(HeaderFields.ACCOUNT_ID_HEADER_NAME, accountID.ToString());
+                context.Request.Headers.Add(HeaderFields.SESSION_ID_HEADER_NAME, sessionID.ToString());
 
                 await next(context);
             }

@@ -1,6 +1,6 @@
 namespace DataAPI.Constants
 {
-    public static class Headers
+    public static class HeaderFields
     {
         public const string ACCOUNT_ID_HEADER_NAME = "AccountID";
         public const string SESSION_ID_HEADER_NAME = "SessionID";
