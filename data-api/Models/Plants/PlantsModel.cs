@@ -6,7 +6,7 @@ using MySql.Data.MySqlClient;
 
 namespace DataAPI.Models
 {
-    public class PlantsModel
+    public static class PlantsModel
     {
         public static async Task<PlantEntity> GetPlantByID(Guid plantId)
         {
@@ -18,7 +18,7 @@ namespace DataAPI.Models
 
                 MySqlCommand cmd = db.Connection.CreateCommand();
 
-                string query = "SELECT CommonName, Description FROM plant " +
+                string query = "SELECT PlantID, CommonName, ScientificName, Description FROM plant_entity " +
                                "WHERE PlantID = @PlantID";
 
                 cmd.Parameters.AddWithValue("@PlantID", plantId);
@@ -29,10 +29,12 @@ namespace DataAPI.Models
                 if (reader.HasRows)
                 {
                     await reader.ReadAsync();
+                    Guid plantID = reader["PlantID"] as Guid? ?? Guid.Empty;
                     string commonName = reader["CommonName"] as string ?? null; // Cleanly catch cast error to null
+                    string scientificName = reader["ScientificName"] as string ?? null;
                     string description = reader["Description"] as string ?? null;
 
-                    plant = new PlantEntity(commonName, description);
+                    plant = new PlantEntity(plantID, commonName, scientificName, description);
                 }
             }
 

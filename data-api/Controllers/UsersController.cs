@@ -20,7 +20,7 @@ namespace DefaultNamespace
             Guid id;
             if (Guid.TryParse(userAccountId, out id))
             {
-                UserAccount account = await UsersModel.GetUserByID(id);
+                UserAccount account = await UserAccountsModel.GetUserByID(id);
                 if (account != null)
                 {
                     fullName = account.FirstName + account.LastName;
@@ -37,11 +37,11 @@ namespace DefaultNamespace
         /// <param name="lastName"></param>
         /// <returns></returns>
         [HttpPost("create-user")]
-        public async Task<ActionResult> CreateUser(string firstName, string lastName)
+        public async Task<ActionResult> CreateUser(string email, string firstName, string lastName)
         {
-            if (await UsersModel.AddUser(new UserAccount(firstName, lastName)))
-                // Status 200
-                return new OkResult();
+            // if (await UsersModel.AddUser(new UserAccount(firstName, lastName)))
+            //     // Status 200
+            //     return new OkResult();
             // Status 400
             return new BadRequestResult();
         }

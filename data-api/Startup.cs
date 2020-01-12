@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAPI.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -42,7 +43,7 @@ namespace DataAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
         {
             // Cross Origin Resource Sharing - Allow requests from other domains within browsers.
             app.UseCors("OpenCorsPolicy");
@@ -65,6 +66,23 @@ namespace DataAPI
                 // HTTPS Header Middleware
                 app.UseHsts();
             }
+
+            // Selective Middleware
+            // Require Jwt Authentication
+            app.UseWhen(x => x.Request.Path.Value.Contains("/api/"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<RequireLocalAuthentication>();
+
+                appBuilder.Use(async (context, next) =>
+                {
+                    string userAccountIdString = context.Request
+                        .Headers[RequireLocalAuthentication.USER_ACCOUNT_ID_HEADER_NAME];
+
+                    logger.LogInformation("Request from: {0}", userAccountIdString);
+
+                    await next();
+                });
+            });
 
             // Attach API controllers
             app.UseMvc();

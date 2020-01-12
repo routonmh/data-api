@@ -1,24 +1,28 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace DataAPI.Models.Users
 {
     public class UserAccount
     {
-        public Guid UserID { get; }
+        public Guid AccountID { get; }
+        public string Email { get; }
         public string FirstName { get; }
         public string LastName { get; }
+        public DateTime CreationDate { get; }
+        public bool IsActive { get; }
+        [JsonIgnore] public string PasswordHash { get; }
 
-
-        public UserAccount(string firstName, string lastName)
-            : this(Guid.Empty, firstName, lastName)
+        public UserAccount(Guid accountId, string email, string firstName, string lastName, string passwordHash,
+            DateTime creationDate, bool isActive)
         {
-        }
-
-        public UserAccount(Guid userId, string firstName, string lastName)
-        {
-            UserID = userId;
+            AccountID = accountId;
+            Email = email;
             FirstName = firstName;
             LastName = lastName;
+            PasswordHash = passwordHash;
+            CreationDate = creationDate;
+            IsActive = isActive;
         }
     }
 }
