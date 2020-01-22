@@ -16,9 +16,7 @@ namespace DefaultNamespace
             PlantEntity plant = null;
             Guid id;
             if (Guid.TryParse(plantId, out id))
-            {
                 plant = await PlantsModel.GetPlantByID(id);
-            }
 
             return plant;
         }
@@ -32,5 +30,7 @@ namespace DefaultNamespace
         {
             return await PlantsModel.GetPlantsListing();
         }
+
+
     }
 }
