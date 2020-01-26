@@ -44,7 +44,12 @@ There is an included sample database schema along with some records.
 Quick information to get you started with the
  structure of MVC .NET Core: 
  
-### Controllers
-### Models 
-### Middleware
-### Authentication
+## Controllers
+Controllers are methods bound to route handlers along with
+their parameters. Parameters in these methods can have
+annotations to indicate that the value comes from 
+the request body, header, or query parameters.
+
+## Models 
+## Middleware
+## Authentication

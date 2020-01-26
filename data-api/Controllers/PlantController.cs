@@ -21,6 +21,11 @@ namespace DefaultNamespace
             return plant;
         }
 
+        public async Task<ActionResult<List<PlantEntity>>> SearchPlants()
+        {
+            return null;
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -31,6 +36,14 @@ namespace DefaultNamespace
             return await PlantsModel.GetPlantsListing();
         }
 
-
+        /// <summary>
+        /// PlantID in request body overriden.
+        /// </summary>
+        /// <param name="plant"></param>
+        /// <returns></returns>
+        public async Task<ActionResult<bool>> CreatePlantEntity([FromBody] PlantEntity plant)
+        {
+            return await PlantsModel.CreatePlantEntity(plant);
+        }
     }
 }

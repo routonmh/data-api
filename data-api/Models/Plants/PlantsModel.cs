@@ -78,5 +78,37 @@ namespace DataAPI.Models
 
             return plants;
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="plant"></param>
+        /// <returns></returns>
+        public static async Task<bool> CreatePlantEntity(PlantEntity plant)
+        {
+            bool success = false;
+
+            using (LocalDB db = new LocalDB())
+            {
+                await db.Connection.OpenAsync();
+                MySqlCommand cmd = db.Connection.CreateCommand();
+
+                string query = "INSERT INTO plant_entity (PlantID, CommonName, ScientificName, " +
+                               "Description) VALUES (@PlantID, @CommonName, @ScientificName, " +
+                               "@Description);";
+
+                cmd.Parameters.AddWithValue("@PlantID", Guid.NewGuid());
+                cmd.Parameters.AddWithValue("@CommonName", plant.CommonName);
+                cmd.Parameters.AddWithValue("@ScientificName", plant.ScientificName);
+                cmd.Parameters.AddWithValue("@Description", plant.Description);
+
+                cmd.CommandText = query;
+
+                await cmd.ExecuteNonQueryAsync();
+                success = true;
+            }
+
+            return success;
+        }
     }
 }

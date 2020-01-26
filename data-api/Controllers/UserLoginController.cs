@@ -14,7 +14,6 @@ namespace DataAPI.Controllers
     [ApiController]
     public class UserLoginController : Controller
     {
-        // public async Task<ActionResult<string>> LoginUser(string email, string candidatePassword)
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginUser([FromQuery] string email,
             [FromQuery] string candidatePassword)
