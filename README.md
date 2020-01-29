@@ -50,6 +50,59 @@ their parameters. Parameters in these methods can have
 annotations to indicate that the value comes from 
 the request body, header, or query parameters.
 
-## Models 
+### Controller Example:
+
+## Models
+Models are mainly used to interact with the database and issue queries.
+
 ## Middleware
+Middleware is applied to requests **before** they reach the
+controller methods.
+Common usages of middleware are to check for authentication and
+modify headers. Another good usage is to log request traffic & usage.
+Multiple middlewares that call a `next` method are frequently used to
+run several processes before handling the request. If a middleware class'
+`Invoke` method is not called, the request is short-circuited and the controller
+never receives the full request. It is up to the middleware that terminates the
+request to set an appropriate status code and return a meaningful error message.
+
+### Middleware Example
+The `Invoke(HttpContext)` method is given to any class to be used as middleware.
+When the middleware is called this method takes the `HttpContext` which includes
+the request and response (to be sent) data. Any middleware's `Invoke` method
+can be used to affect the response **after** the controller method has
+been called in the part of the method below the call to `next(context)`.
+
+```
+ public async Task Invoke(HttpContext context)
+        {
+            Guid sessionID = Guid.Parse(context.Request.Headers[HeaderFields.SESSION_ID_HEADER_NAME]);
+
+            logger.LogInformation("Incrementing request count on session id: " + sessionID.ToString());
+
+            // No need to await the increment log query.
+            UserSessionsModel.IncrementSessionRequestCount(sessionID);
+            UserSessionsModel.UpdateSessionLastRequestTime(sessionID);
+
+            await next(context);
+            
+            // Any code here is meant to affect the response
+        }
+```
+
 ## Authentication
+
+# Documentation
+
+### Code (Javadoc)
+
+### REST API
+
+# Testing
+
+An awesome feature of testing in ASP.NET Core is the ability to
+test route handlers and their corresponding controller methods in a
+single call. This may not seem like a significant feature but after
+working with testing route and controllers in Node.js this is a huge
+convienience.
+
