@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
 namespace DataAPI.Models.DBs
@@ -14,6 +15,16 @@ namespace DataAPI.Models.DBs
                 .GetEnvironmentVariable("LOCAL_DB_CONNECTION");
 
             Connection = new MySqlConnection(connectionString);
+        }
+
+        public override Task OpenConnectionAsync()
+        {
+            return Connection.OpenAsync();
+        }
+
+        public override MySqlCommand CreateNewCommand()
+        {
+            return Connection.CreateCommand();
         }
     }
 }

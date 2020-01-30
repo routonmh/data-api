@@ -10,7 +10,7 @@ namespace DataAPI.Controllers
         [HttpGet]
         public ContentResult GetHome()
         {
-            string content = "<h1>Sample .NET Core API</h1>" +
+            string content = "<h1>.NET Core API</h1>" +
                              "<p>Base Project</p>" +
                              "<a href=\"https://github.com/routonmh/data-api\">GitHub</a>";
 

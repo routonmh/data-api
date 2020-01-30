@@ -18,8 +18,8 @@ namespace DataAPI.Models.Users
 
             using (LocalDB db = new LocalDB())
             {
-                await db.Connection.OpenAsync();
-                MySqlCommand cmd = db.Connection.CreateCommand();
+                await db.OpenConnectionAsync();
+                MySqlCommand cmd = db.CreateNewCommand();
 
                 string query = "INSERT INTO user_session (SessionID, AccountID, DateIssued, RequestCount, " +
                                "DateLastRequest) " +
@@ -49,13 +49,28 @@ namespace DataAPI.Models.Users
         {
             using (LocalDB db = new LocalDB())
             {
-                await db.Connection.OpenAsync();
-                MySqlCommand cmd = db.Connection.CreateCommand();
+                await db.OpenConnectionAsync();
+                MySqlCommand cmd = db.CreateNewCommand();
 
                 string query = "DELETE FROM user_session WHERE SessionID = @SessionID;";
 
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@SessionID", sessionID);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+
+        public static async Task RemoveAllUserSessions(Guid accountID)
+        {
+            using (LocalDB db = new LocalDB())
+            {
+                await db.OpenConnectionAsync();
+                MySqlCommand cmd = db.CreateNewCommand();
+
+                string query = "DELETE FROM user_session WHERE AccountID = @AccountID;";
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@AccountID", accountID);
 
                 await cmd.ExecuteNonQueryAsync();
             }
@@ -70,11 +85,11 @@ namespace DataAPI.Models.Users
         {
             using (LocalDB db = new LocalDB())
             {
-                await db.Connection.OpenAsync();
-                MySqlCommand cmd = db.Connection.CreateCommand();
+                await db.OpenConnectionAsync();
+                MySqlCommand cmd = db.CreateNewCommand();
 
-                string query = "UPDATE user_session SET RequestCount = RequestCount + 1 WHERE SessionID = " +
-                               "@SessionID;";
+                string query = "UPDATE user_session SET RequestCount = IFNULL(RequestCount,0) + 1 " +
+                               "WHERE SessionID = @SessionID;";
 
                 cmd.CommandText = query;
                 cmd.Parameters.AddWithValue("@SessionID", sessionID);

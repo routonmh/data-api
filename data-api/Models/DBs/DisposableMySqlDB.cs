@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
 namespace DataAPI.Models.DBs
@@ -11,5 +12,8 @@ namespace DataAPI.Models.DBs
         {
             Connection.CloseAsync();
         }
+
+        public abstract Task OpenConnectionAsync();
+        public abstract MySqlCommand CreateNewCommand();
     }
 }

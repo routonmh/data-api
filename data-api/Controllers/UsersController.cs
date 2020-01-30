@@ -36,9 +36,19 @@ namespace DataAPI.Controllers
             [FromHeader(Name = HeaderFields.SESSION_ID_HEADER_NAME)]
             string sessionID)
         {
-            int t = 1;
+            Guid parsedSessionID;
+            bool success = false;
 
-            return new OkResult();
+            if (Guid.TryParse(sessionID, out parsedSessionID))
+            {
+                await UserSessionsModel.RemoveUserSession(parsedSessionID);
+                success = true;
+            }
+
+            if (success)
+                return new OkResult();
+            else
+                return new NotFoundResult();
         }
     }
 }
